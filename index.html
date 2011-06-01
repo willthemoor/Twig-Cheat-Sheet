@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	
+	<title>Twig-o-rama</title>
+	<meta name="description" content="">
+	<meta name="author" content="@nonsie, @syrupcore">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="stylesheet" href="css/style.css?v=2">
+
+	<!--[if lt IE 9]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+</head>
+<body onload="pageInit()">
+	<div id="container">
+		<header>
+			<h1>It's Twig-o-rama!</h1>
+		</header>	
+		<div class="col">
+			<section>
+				<h2>Variables</h2>
+				<dl>
+					<dt>Simple variable</dt>
+					<dd>&lt;h1&gt;{{ sitename }}&lt;/h1&gt;</dd>
+					<dt>Array element (value of key name in array named user)</dt>
+					<dd>&lt;h2&gt;{{ user.name }}&lt;/h2&gt;</dd>
+					<dt>Always available variables:</dt>
+					<dd>{{ _context }} - current context</dd>
+					<dd>{{ _self }} - current template</dd>
+					<dd>{{ _charset }} - current character set</dd>
+				</dl>
+			</section>	
+
+			<section>
+				<h2>Assignments</h2>
+				<h3>Use set tag:</h3>
+					<dl>
+					<dt>a simple value</dt>
+					<dd>{% set foo = ‘bar’ %}</dd>
+					<dt>an array</dt>
+					<dd>{% set foo = [1,2] %}</dd>
+					<dt>array with keys</dt>
+					<dd>{% set foo = {’foo’:’bar’} %}</dd>
+					<dt>with a variable</dt>
+					<dd>{% set foo = bar ~’baz’ %} </dd>
+					<dt>longer strings</dt>
+					<dd class="codeblock">{% set message %}
+  This is an error message.
+{% endset %}</dd>
+				</dl>
+			</section>	
+			
+			<section>
+				<h2>Control structures</h2>
+				<dl>
+					<dt>Available:</dt>
+					<dd>if (same as in PHP), elseif, else, for, tags (see below)</dd>
+					<dd class="codeblock">{% for user in users %}
+  &lt;li&gt;{{ user.username }}&lt;/li&gt;
+{% endfor %}</dd>
+					<dt>Expressions</dt>
+					<dd>or, and, ==, !=, &lt;, &gt;, &gt;=, &lt;=, in, +, -, ~, *, /, %, //, is, .., **</dd>
+				</dl>
+			</section>
+
+			<section>
+				<h2>Tag</h2>
+				<dl>
+					<dt>Must have start and end tag</dt>
+					<dd class="codeblock">{% if page is defined %}
+  &lt;h1&gt;{{ pagetitle }}&lt;/h1&gt;
+{% endif %}</dd>
+				</dl>
+			</section>
+			
+		</div><!-- /.col -->
+		
+		<div class="col">
+			
+			<section>
+				<h2>Filter</h2>
+				<dl>
+					<dt>Apply one or more separated by a pipe (|)</dt>
+					<dd>{{ list|join(‘, ‘)|title }}</dd>
+				</dl>
+			</section>	
+			
+			<section>
+				<h2>Escaping</h2>
+				<dl>
+					<dt>To escape Twig specific tags use raw filter</dt>
+					<dd>{{ '{{twigvariable}}'| raw }}</dd>
+					<dt>To escape HTML use escape filter (PHP’s htmlspecialchars())</dt>
+					<dd>{{&apos;&lt;script&gt;iCanHasServer(?)&lt;/script&gt;&apos; | escape}}</dd>
+				</dl>	
+			</section>
+				
+			<section>
+				<h2>Comments</h2>
+				<code>{# A comment #}</code>
+			</section>	
+			
+			<section>
+				<h2>Includes</h2>
+				<dl>
+					<dt>Simple Include</dt>
+					<dd>{% include 'relative/to/template/root/mypage.html' %}</dd>
+					<dt>Pass vars to the included file as an object</dt>
+					<dd>{% include 'mypage.html' with {'key': 'value'} %}</dd>
+				</dl>
+			</section>
+			
+			<section>
+				<h2>Block</h2>
+				<dl>
+					<dt>Lorem ipsum dolor sit amet, consectetur adipisicing elit, </dt>
+					<dd>{{ sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. }}</dd>
+					<dt>Lorem ipsum dolor sit amet, consectetur adipisicing elit, </dt>      
+					<dd>{{ sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. }}</dd>
+					<dt>Lorem ipsum dolor sit amet, consectetur adipisicing elit, </dt>      
+					<dd>{{ sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. }}</dd>
+				</dl>
+			</section>	
+			
+		</div><!-- /.col -->
+
+		
+
+
+		<div class="col">
+			<section>
+				<h2>Macros</h2>
+				<dl>
+					<dt>Twig macro == PHP function (no access to variables outside of the macro). </dt>
+					<dd class="codeblock">{% macro state_option(code, name, current) %} 
+{% set selected = current == code ? 'selected' : '' %} 
+  &lt;option value="{{code}}" name="{{name}}" {{selected}}&gt;{{name}}&lt;/option&gt;
+{% endmacro %}</dd>
+					<dt>Can be defined anywhere but needs to be imported before use.</dt>
+					<dd>{% import "states-select.html" as states %}</dd>
+					<dt>Calling macros</dt>	
+					<dd>{{ states.state_option(state.code, state.name, selected_state) }}</dd>
+				</dl>
+			</section>	
+
+			<section>
+				<h2>Translation</h2>
+
+				<h3>Uses Twig i18n plugin</h3>
+				<dl>
+					<dt>Use short version for simple strings without variables and double quotes</dt>
+					<dd>{%trans “Hello world!” %}</dd>
+					<dt>Use long version for more complex strings. All variables must be simple variables.</dt>
+					<dd class="codeblock">{% trans %}
+  Hello {{user.name}}
+{% endtrans %}</dd>
+					<dt>Translation with a placeholder and a filter</dt>
+					<dd  class="codeblock">{% set message %}
+  {% trans "Sorry! We can't find %loc. Please try again." %}
+{% endset %}
+{{ message | replace({'%loc': search}) }}</dd>
+				</dl>
+			</section>	
+				
+			
+	
+		</div><!-- /.col -->
+		
+		<footer>
+			<p>Twig documentation: <a href="http://www.twig-project.org/documentation">http://www.twig-project.org/documentation</a></p>
+			<p><a id="lights" href="#dark">Lights</a></p>
+		</footer>
+		
+	</div><!-- /#container -->	
+
+
+	<script src="js/script.js"></script>
+
+</body>
+</html>
