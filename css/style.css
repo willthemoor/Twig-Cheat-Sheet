@@ -251,7 +251,7 @@ footer p {
 	body,html,#container{
 	margin: 0;
 	padding: 0;}
-	h1{padding: 0;
+	h1, header{padding: 0;
 		-moz-box-shadow: 		0 0 0 transparent;
 		-webkit-box-shadow: 	0 0 0 transparent;
 		box-shadow: 			0 0 0 transparent;
